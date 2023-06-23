@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/.prisma/"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Story {
+  id          Int    @id @default(autoincrement())
+  title       String @unique
+  slug        String @unique
+  description String
+
+  datePublished DateTime @default(now())
+  dateUpdated   DateTime @default(now())
+
+  medias Media[]
+
+  content String
+
+  tags String[]
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  successorId Int?   @unique
+  successor   Story? @relation("StoryHistory", fields: [successorId], references: [id])
+  predecessor Story? @relation("StoryHistory")
+
+  primarySourceName String?
+  primarySourceLink String?
+  primarySourceDate DateTime?
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  slug String @unique
+
+  stories Story[]
+}
+
+model Media {
+  id   Int       @id @default(autoincrement())
+  type MediaType
+  url  String    @unique
+
+  description String?
+
+  primarySourceName String?
+  primarySourceLink String?
+  primarySourceDate DateTime?
+
+  Story   Story? @relation(fields: [storyId], references: [id])
+  storyId Int?
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
