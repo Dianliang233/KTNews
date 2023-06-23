@@ -33,9 +33,16 @@ model Story {
   successor   Story? @relation("StoryHistory", fields: [successorId], references: [id])
   predecessor Story? @relation("StoryHistory")
 
-  primarySourceName String?
-  primarySourceLink String?
-  primarySourceDate DateTime?
+  primarySources Source[]
+}
+
+model Source {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  link String @unique
+
+  stories Story[]
+  medias  Media[]
 }
 
 model Category {
@@ -53,11 +60,10 @@ model Media {
 
   description String?
 
-  primarySourceName String?
-  primarySourceLink String?
-  primarySourceDate DateTime?
+  primarySource   Source? @relation(fields: [primarySourceId], references: [id])
+  primarySourceId Int?
 
-  Story   Story? @relation(fields: [storyId], references: [id])
+  story   Story? @relation(fields: [storyId], references: [id])
   storyId Int?
 }
 

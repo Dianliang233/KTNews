@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "pnpify prisma generate",
+    "db:push": "pnpify prisma db push",
+    "db:studio": "pnpify prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^4.16.1",
